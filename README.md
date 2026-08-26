@@ -159,6 +159,38 @@ All tuning is via environment variables — set them in your agent's MCP config 
 | `WB_SKIP_PERMISSIONS` | `true` | `true` adds `--dangerously-skip-permissions` (needed for scripted file/network tools). Set `false` to keep interactive approval. |
 | `WB_TIMEOUT` | `600000` | Per-task timeout in ms (10 min). Tasks exceeding it are killed. |
 | `WB_CWD` | _(unset)_ | Default working directory used when a call doesn't pass `cwd`. |
+| `WB_MODEL` | _(unset)_ | Default model used when a call doesn't pass `model` (e.g. `hy3`, `deepseek-v4-flash`, `glm-5.3`, `kimi-k3-1`, `auto`). |
+| `WB_FALLBACK_MODEL` | _(unset)_ | Model to auto-switch to when the primary is overloaded/rate-limited (maps to `--fallback-model`, only works with `--print`). **This is the fix for "free model rate-limited" situations.** |
+
+### Switching models / 切换模型
+
+The `codebuddy` CLI exposes `--model <id>` and `--fallback-model <id>` (the latter only takes effect under `--print`, which this server always uses). This server surfaces both:
+
+- **Per call** — pass `model` and/or `fallbackModel` to `run_workbuddy_task`.
+- **Globally** — set `WB_MODEL` and/or `WB_FALLBACK_MODEL` in the agent's MCP `environment` block; they apply when the call doesn't pass them.
+
+Available models (from `codebuddy --help`): `auto`, `hy3`, `hy3-x`, `glm-5.3`, `glm-5.2`, `glm-5.1`, `glm-5v-turbo`, `minimax-m3`, `kimi-k3-1`, `kimi-k2.7`, `kimi-k2.6`, `deepseek-v4-flash`, `deepseek-v4-pro`.
+
+**Rate-limited on the free model?** Don't hard-switch — add a fallback so hy3 stays primary but auto-recovers when overloaded:
+
+```jsonc
+// opencode.json / claude mcp config environment
+{
+  "WB_MODEL": "hy3",
+  "WB_FALLBACK_MODEL": "deepseek-v4-flash"
+}
+```
+
+Or per call: `run_workbuddy_task({ prompt: "...", fallbackModel: "deepseek-v4-flash" })`.
+
+切换模型 / 模型切换
+
+`codebuddy` 自带 `--model <id>` 与 `--fallback-model <id>`（`--fallback-model` 仅在 `--print` 下生效，而本服务始终用 `-p`，所以可用）。本服务把两者都暴露出来：
+
+- **单次调用**：给 `run_workbuddy_task` 传 `model` 和/或 `fallbackModel`。
+- **全局默认**：在 Agent 的 MCP `environment` 里设 `WB_MODEL` / `WB_FALLBACK_MODEL`，调用未传时使用。
+
+免费模型被限流时，建议**不要硬性切走**，而是加一个回退：hy3 仍是首选，过载时自动切到 `deepseek-v4-flash` 等，等限流恢复又自动用回 hy3。
 
 ## Security note / 安全提示
 

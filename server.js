@@ -18,6 +18,10 @@
  *   WB_TIMEOUT          单次任务超时(ms)，默认 600000 (10 分钟)。
  *   WB_CWD              默认工作目录（可选）。当工具调用不传 cwd 时使用，
  *                       决定 codebuddy 在哪个目录读写文件。
+ *   WB_MODEL            默认模型（可选）。当工具调用不传 model 时使用，
+ *                       如 hy3 / deepseek-v4-flash / glm-5.3 / auto 等。
+ *   WB_FALLBACK_MODEL   过载时自动回退的模型（可选）。接到 codebuddy 的
+ *                       --fallback-model，仅 --print 模式生效——正是限流/过载场景的救场参数。
  *
  * 重要：先在本机安装并验证 codebuddy：
  *   npm install -g @tencent-ai/codebuddy-code
@@ -40,6 +44,8 @@ const WB_SKIP_PERMISSIONS = (process.env.WB_SKIP_PERMISSIONS ?? "true") !== "fal
 const rawTimeout = Number(process.env.WB_TIMEOUT);
 const WB_TIMEOUT = Number.isFinite(rawTimeout) && rawTimeout > 0 ? rawTimeout : 600000;
 const WB_DEFAULT_CWD = process.env.WB_CWD;
+const WB_DEFAULT_MODEL = process.env.WB_MODEL;
+const WB_FALLBACK_MODEL = process.env.WB_FALLBACK_MODEL;
 
 const server = new McpServer({
   name: "workbuddy-mcp",
@@ -59,7 +65,10 @@ function stripAnsi(s) {
 function buildArgs(prompt, opts) {
   const args = ["-p", prompt];
   if (WB_SKIP_PERMISSIONS) args.push("--dangerously-skip-permissions");
-  if (opts.model) args.push("--model", opts.model);
+  const model = opts.model || WB_DEFAULT_MODEL;
+  if (model) args.push("--model", model);
+  const fallback = opts.fallbackModel || WB_FALLBACK_MODEL;
+  if (fallback) args.push("--fallback-model", fallback);
   if (opts.json) args.push("--output-format", "json");
   return args;
 }
@@ -78,7 +87,15 @@ server.tool(
     model: z
       .string()
       .optional()
-      .describe("可选：指定模型别名，如 sonnet / opus / 具体模型全名"),
+      .describe(
+        "可选：指定本次会话模型，如 hy3 / hy3-x / deepseek-v4-flash / glm-5.3 / kimi-k3-1 / auto。不传则用 WB_MODEL 或 codebuddy 默认"
+      ),
+    fallbackModel: z
+      .string()
+      .optional()
+      .describe(
+        "可选：过载/限流时自动回退的模型（接到 --fallback-model，仅 --print 生效）。不传则用 WB_FALLBACK_MODEL"
+      ),
     json: z
       .boolean()
       .optional()
@@ -86,9 +103,9 @@ server.tool(
         "可选：true 时追加 --output-format json（取决于 codebuddy 版本是否支持）"
       ),
   },
-  async ({ prompt, cwd, model, json }) => {
+  async ({ prompt, cwd, model, fallbackModel, json }) => {
     const runCwd = cwd || WB_DEFAULT_CWD;
-    const args = buildArgs(prompt, { model, json });
+    const args = buildArgs(prompt, { model, fallbackModel, json });
     try {
       const { stdout, stderr } = await execFileAsync(WB_COMMAND, args, {
         // shell:true 让 Windows 能正确解析全局装的 codebuddy.cmd / PATH 查找
