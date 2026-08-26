@@ -1,0 +1,19 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "workbuddy": {
+      "type": "local",
+      "command": [
+        "node",
+        "D:/WorkBuddy/2026-08-26-10-43-45/workbuddy-mcp/server.js"
+      ],
+      "enabled": true,
+      "cwd": "D:/WorkBuddy/2026-08-26-10-43-45",
+      "environment": {
+        "WB_CWD": "D:/WorkBuddy/2026-08-26-10-43-45",
+        "WB_SKIP_PERMISSIONS": "true",
+        "WB_TIMEOUT": "600000"
+      }
+    }
+  }
+}

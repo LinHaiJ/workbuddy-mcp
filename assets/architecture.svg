@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 200" role="img" aria-label="Architecture of workbuddy-mcp">
+  <defs>
+    <style>
+      .b1{fill:#0b72ef} .b2{fill:#2f6fed} .b3{fill:#5b8def} .b4{fill:#0a8f5b}
+      .t{fill:#ffffff;font:600 14px -apple-system,Segoe UI,Roboto,Arial,sans-serif;text-anchor:middle}
+      .s{fill:#e8f0fe;font:400 11px -apple-system,Segoe UI,Roboto,Arial,sans-serif;text-anchor:middle}
+      .a{stroke:#888;stroke-width:2;fill:none;marker-end:url(#arrow)}
+      .l{fill:#555;font:400 11px -apple-system,Segoe UI,Roboto,Arial,sans-serif;text-anchor:middle}
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#888"/>
+    </marker>
+  </defs>
+
+  <rect class="b1" x="10" y="55" width="140" height="80" rx="10"/>
+  <rect class="b2" x="175" y="55" width="140" height="80" rx="10"/>
+  <rect class="b3" x="340" y="55" width="140" height="80" rx="10"/>
+  <rect class="b4" x="505" y="55" width="150" height="80" rx="10"/>
+
+  <text class="t" x="80" y="85">AI Agent</text>
+  <text class="s" x="80" y="105">Claude Code</text>
+  <text class="s" x="80" y="120">Codex · Cursor · OpenCode</text>
+
+  <text class="t" x="245" y="90">workbuddy-mcp</text>
+  <text class="s" x="245" y="110">MCP Server (stdio)</text>
+
+  <text class="t" x="410" y="85">codebuddy CLI</text>
+  <text class="s" x="410" y="105">-p --dangerously-</text>
+  <text class="s" x="410" y="120">skip-permissions</text>
+
+  <text class="t" x="580" y="90">WorkBuddy</text>
+  <text class="s" x="580" y="110">does the work</text>
+
+  <line class="a" x1="150" y1="95" x2="172" y2="95"/>
+  <line class="a" x1="315" y1="95" x2="337" y2="95"/>
+  <line class="a" x1="480" y1="95" x2="502" y2="95"/>
+
+  <text class="l" x="161" y="48">MCP tool call</text>
+  <text class="l" x="326" y="48">shell out</text>
+  <text class="l" x="491" y="48">run task</text>
+</svg>

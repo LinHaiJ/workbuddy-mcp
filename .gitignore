@@ -1,0 +1,17 @@
+# dependencies
+node_modules/
+
+# npm cache (used when the default cache dir is not writable)
+npmcache/
+
+# logs
+*.log
+*.err
+
+# debug / scratch files produced during development (never commit)
+_*
+test_del.txt
+_del.py
+
+# legacy redirect shim kept locally but not published
+server.ts
