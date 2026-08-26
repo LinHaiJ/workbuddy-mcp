@@ -7,6 +7,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Claude%20Code%20%7C%20Codex%20%7C%20Cursor%20%7C%20OpenCode-9cf)](https://github.com/LinHaiJ/workbuddy-mcp)
 [![Node](https://img.shields.io/badge/node-%3E%3D18-green)](package.json)
+[![Smoke Test](https://github.com/LinHaiJ/workbuddy-mcp/actions/workflows/smoke.yml/badge.svg)](https://github.com/LinHaiJ/workbuddy-mcp/actions/workflows/smoke.yml)
 
 **English** · [简体中文](#简体中文)
 
@@ -192,6 +193,15 @@ The MCP server is local; the `codebuddy` calls reach WorkBuddy's service, so an 
 ## Contributing / 贡献
 
 PRs and ideas are welcome! Issues labeled `good first issue` are a good place to start. See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+Every push / PR runs a smoke test (`.github/workflows/smoke.yml`) that checks syntax on Node 18/20/22 and verifies the server completes an MCP `initialize` → `tools/list` handshake. To run it locally:
+
+每提交 / 开 PR 都会跑一个冒烟测试（`.github/workflows/smoke.yml`），在 Node 18/20/22 上检查语法并验证 Server 能完成 MCP `initialize` → `tools/list` 握手。本地自测：
+
+```bash
+npm install
+node test/smoke.mjs
+```
 
 欢迎 PR 和想法！可以从 `good first issue` 标签的议题入手。
 
