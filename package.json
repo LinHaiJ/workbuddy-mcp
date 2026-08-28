@@ -1,6 +1,6 @@
 {
   "name": "workbuddy-mcp",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "把 WorkBuddy（codebuddy CLI）包装成 MCP Server，让 Claude Code / Codex / Cursor / OpenCode 等任意 MCP 客户端把它当子 Agent 调用",
   "type": "module",
   "bin": {

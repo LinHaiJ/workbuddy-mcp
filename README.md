@@ -49,7 +49,8 @@ Your agent (Claude Code / Codex / Cursor / OpenCode)
 workbuddy-mcp   (this server, stdio MCP)
       │  shells out:
       ▼
-codebuddy -p "<prompt>" --dangerously-skip-permissions
+codebuddy -p --dangerously-skip-permissions   # prompt passed via stdin
+
       │
       ▼
 WorkBuddy   (does the actual work, returns text)
@@ -157,7 +158,8 @@ All tuning is via environment variables — set them in your agent's MCP config 
 |:--------|:-------:|:--------|
 | `WB_COMMAND` | `codebuddy` | The CLI to drive. If `command not found`, point to the absolute path (e.g. `C:\...\codebuddy.cmd`). |
 | `WB_SKIP_PERMISSIONS` | `true` | `true` adds `--dangerously-skip-permissions` (needed for scripted file/network tools). Set `false` to keep interactive approval. |
-| `WB_TIMEOUT` | `600000` | Per-task timeout in ms (10 min). Tasks exceeding it are killed. |
+| `WB_TIMEOUT` | `900000` | Default per-task timeout in ms (15 min). Tasks exceeding it are killed and partial output is returned. Per call you can pass `timeoutMs` (e.g. `1800000` for long research tasks). |
+
 | `WB_CWD` | _(unset)_ | Default working directory used when a call doesn't pass `cwd`. |
 | `WB_MODEL` | _(unset)_ | Default model used when a call doesn't pass `model` (e.g. `hy3`, `deepseek-v4-flash`, `glm-5.3`, `kimi-k3-1`, `auto`). |
 | `WB_FALLBACK_MODEL` | _(unset)_ | Model to auto-switch to when the primary is overloaded/rate-limited (maps to `--fallback-model`, only works with `--print`). **This is the fix for "free model rate-limited" situations.** |
